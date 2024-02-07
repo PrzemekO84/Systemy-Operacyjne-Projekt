@@ -1,5 +1,8 @@
 import os
-from ShowFolderFilers import wyswietl_foldery, nawiguj_po_folderach
+#from ShowFolderFilers import wyswietl_foldery, nawiguj_po_folderach
+from PasswordGenerator import PasswordGenerator, proceed
+
+
 
 def main():
     
@@ -32,6 +35,8 @@ def main():
 
         elif user_choice == 3:
             print("\nCreate a new strong password for the site")
+            password_generator = PasswordGenerator()
+            password_generator
             print("")
             proceed()
 
@@ -57,13 +62,9 @@ def main():
             continue
 
 
-def proceed():
-    print("Press any key to proceed.")
-    input()
-    #trzeba bedzie zamienic prawdopodobnie cls na clear dla systemu linux
-    os.system("cls")
 
-program_start = main()
+
+#program_start = main()
 
 
 
