@@ -35,8 +35,19 @@ def main():
 
         elif user_choice == 3:
             print("\nCreate a new strong password for the site")
+            print("")
+            
             password_generator = PasswordGenerator()
-            password_generator
+            user_choice_password_type = password_generator.Password_Type()
+            user_choice_password_length = password_generator.Password_Length()
+
+
+            if user_choice_password_type == 1:
+                password_generator.User_Password(user_choice_password_length)
+
+            elif user_choice_password_type == 2:
+                password_generator.Random_Password(user_choice_password_length)
+
             print("")
             proceed()
 
@@ -64,7 +75,7 @@ def main():
 
 
 
-#program_start = main()
+program_start = main()
 
 
 

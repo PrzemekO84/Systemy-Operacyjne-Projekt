@@ -1,12 +1,14 @@
 import random
 import string
 import os
+import pyperclip
 
 letters = string.ascii_letters
 digits = string.digits
 chars = string.punctuation
 
 def proceed():
+    print("")
     print("Press any key to proceed.")
     input()
     os.system("cls")
@@ -40,7 +42,8 @@ class PasswordGenerator:
     def Password_Length(self):
         while True:
             try:
-                password_length = int(input("How long do you want your password to be? (minimum 8, maximum 20)\n"))
+                print("")
+                password_length = int(input("How long do you want your password to be? (minimum 8, maximum 20) : "))
             except ValueError:
                 print("Please enter a valid number.\n")
                 proceed()
@@ -60,73 +63,149 @@ class PasswordGenerator:
 
         print("")
         print("Please choose what chars do you want in your password.\n")
-        user_choice_letters = input("Do you want letters in your password ? (Yes/No)")
-        user_choice_letters.lower()
+        
         while True:
-            if user_choice_letters == "Yes" or user_choice_letters == "y":
+            user_choice_letters = input("Do you want letters in your password? (Yes/No) or (y/n) : ")
+            user_choice_letters.lower()
+
+            if user_choice_letters == "yes" or user_choice_letters == "y":
                 chars_option += letters
+                print("Letters added to password")
+                proceed()
+                break
+            elif user_choice_letters == "no" or user_choice_letters == "n":
+                print("No letters in password!")
                 proceed()
                 break
             else:
-                print("Wrong option. Please choose correct answer, (Yes/No)\n")
+                print("")
+                print("Wrong option. Please choose correct answer, (Yes/No) or (y/n)")
                 proceed()
                 continue
+                
+                
         
-        user_choice_digits = input("Do you want digits in your password ? (Yes/No)")
-        user_choice_digits.lower()
+        
         while True:
-            if user_choice_letters == "Yes" or user_choice_letters == "y":
+            user_choice_digits = input("Do you want digits in your password ? (Yes/No) or (y/n) : ")
+            user_choice_digits.lower()
+
+            if user_choice_digits == "yes" or user_choice_digits == "y":
                 chars_option += digits
+                print("Digits added to password!")
+                proceed()
+                break
+            elif user_choice_digits == "no" or user_choice_digits == "n":
+                print("No digits in password!")
                 proceed()
                 break
             else:
-                print("Wrong option. Please choose correct answer, (Yes/No)\n")
+                print("")
+                print("Wrong option. Please choose correct answer, (Yes/No) or (y/n)")
                 proceed()
                 continue
 
-        user_choice_chars = input("Do you want chars in your password ? (Yes/No)")
-        user_choice_chars.lower()
+        
         while True:
-            if user_choice_letters == "Yes" or user_choice_letters == "y":
+            user_choice_chars = input("Do you want chars in your password ? (Yes/No) or (y/n) : ")
+            user_choice_chars.lower()
+
+            if user_choice_chars == "yes" or user_choice_chars == "y":
                 chars_option += chars
+                print("Chars added to password!")
+                proceed()
+                break
+            elif user_choice_chars == "no" or user_choice_chars == "n":
+                print("No chars in password!")
                 proceed()
                 break
             else:
-                print("Wrong option. Please choose correct answer, (Yes/No)\n")
+                print("")
+                print("Wrong option. Please choose correct answer, (Yes/No) or (y/n)")
                 proceed()
                 continue
 
         for x in range(password_length):
-
-            randomchar = random.choice(chars_option)
-
-            password.append(randomchar)
+            x = random.choice(chars_option)
+            password.append(x)
 
         
-        print("Your password is " + "".join(password))
+        string_password = "".join(password)
+        print("Your password is " + string_password)
 
+        while True:
+            clipboard = input("Do you want to save the password to clipboard? (Yes/No) or (y/n) : ")
+            clipboard.lower()
 
-        
+            if clipboard == "yes" or clipboard == "y":
+                pyperclip.copy(str(string_password))
+                print("")
+                print("Your password has been saved!")
+                break
+            elif clipboard == 'no' or clipboard == "n":
+                print("")
+                print("Password not saved in clipboard.")
+                break
+            else:
+                print("")
+                print("Please choose correct answer (Yes/No) or (y/n) : ")
+                proceed()
+                continue
+    
+    def Random_Password(self, password_length):
+        print("")
+        print("Creating random password!")
+        print("")
 
+        chars_group = letters + digits + chars
+        password = []
 
-        
+        for random_char in range(password_length):
+
+            random_char = random.choice(chars_group)
+
+            password.append(random_char)
+
+        string_password = "".join(password)
+        print("Your password is " + string_password)
 
     
+        while True:
+            clipboard = input("Do you want to save the password to clipboard? (Yes/No) or (y/n) : ")
+            clipboard.lower()
+
+            if clipboard == "yes" or clipboard == "y":
+                pyperclip.copy(str(string_password))
+                print("")
+                print("Your password has been saved!")
+                break
+            elif clipboard == 'no' or clipboard == "n":
+                print("")
+                print("Password not saved in clipboard.")
+                break
+            else:
+                print("")
+                print("Please choose correct answer (Yes/No) or (y/n) : ")
+                proceed()
+                continue
 
 
 
-password_generator = PasswordGenerator()
-user_choice_password_type = password_generator.Password_Type()
-user_choice_password_length = password_generator.Password_Length()
+if __name__ == "__main__":
+    password_generator = PasswordGenerator()
+    user_choice_password_type = password_generator.Password_Type()
+    user_choice_password_length = password_generator.Password_Length()
 
 
-if user_choice_password_type == 1:
-    password_length = password_generator.User_Password(user_choice_password_length)
+    if user_choice_password_type == 1:
+        password_generator.User_Password(user_choice_password_length)
 
-elif user_choice_password_type == 2:
-    pass
+    elif user_choice_password_type == 2:
+        password_generator.Random_Password(user_choice_password_length) 
 
-        
+
+    
+       
 
 
 
