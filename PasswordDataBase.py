@@ -118,17 +118,17 @@ def Password_Manager(user_id):
 
         if user_option == 1:
             print("Show list of passwords")
-            show_password = Show_Passwords(user_id)
-            show_password
-            
+            show_list = Show_List(user_id)  
         
         elif user_option == 2:
             print("Add password")
             adding_password = Adding_Password(user_id)
-            adding_password
 
         elif user_option == 3:
             print("Change password")
+        
+        elif user_option == 4:
+            break
 
         else:
             print("Wrong option please choose number between 1 or 4") 
@@ -136,13 +136,35 @@ def Password_Manager(user_id):
 
          
 
-def Show_Passwords(user_id):
+def Show_List(user_id):
     print("")
     check_query = "SELECT * FROM passwords where user_id = %s"
     mycursor.execute(check_query, (user_id,))
     
     for x in mycursor:
-        print(x)
+        print("Name of Website: " f"{x[2]}")
+        print("")
+
+    user_website_choice = input("Please type the name of webiste to show password: ")
+
+    check_query = "SELECT * FROM passwords WHERE page = %s and user_id = %s"
+    mycursor.execute(check_query, (user_website_choice, user_id))
+    result = mycursor.fetchone()
+    
+
+    if result is None:
+        print("Page doesn't exists")
+    
+    else:
+        for x in result:
+            print(x)
+
+
+
+    
+        
+
+        
 
     
 
@@ -165,3 +187,6 @@ register_login = Register_Login()
 password_manager = Password_Manager(register_login)
 
 
+#TODO mozna zalozyc puste konto bez znakow XD, jesli nie uzytkownik nie ma zadnych hasel to wyswietl wiadomosc
+#lower() name of page ? sprawdzaj insert czy taka strona juz istnieje, czasami jak dodajesz hasla na nowym koncie to 
+# user_id sie nie dodaje do tabeli password XD czemu ?
