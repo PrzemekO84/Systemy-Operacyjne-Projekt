@@ -2,16 +2,22 @@ import random
 import string
 import os
 import pyperclip
+import msvcrt
 
 letters = string.ascii_letters
 digits = string.digits
 chars = string.punctuation
 
 def proceed():
-    print("")
     print("Press any key to proceed.")
-    input()
-    os.system("cls")
+    msvcrt.getch()
+    os.system('cls' if os.name == 'nt' else 'clear')
+
+    
+    # print("")
+    # print("Press any key to proceed.")
+    # input()
+    # os.system("cls")
 
 class PasswordGenerator:
 

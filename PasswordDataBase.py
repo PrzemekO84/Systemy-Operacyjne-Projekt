@@ -48,6 +48,9 @@ def Register_Login():
 
         if user_option == 1:
             print("")
+            print("Requirements: Username length 4-20 characters")
+            print("Requirements: Password length 8-20 characters")
+            print("")
             username = input("Please enter your username: ")
             password = input("Please enter your password: ")
             
@@ -61,15 +64,25 @@ def Register_Login():
                 print("")
                 print("Please choose different username.")
 
-            elif len(username) > 20:
+            elif len(username) > 20 or len(username) < 4:
                 print("")
-                print("Your username is to long! (Maximum username length is 20 characters)")
+                print("Incorrect username! (Requirements: Username length 4-20 characters)")
+                proceed()
+
+            elif len(password) > 20 or len(password) < 8:
+                print()
+                print("Incorrect password (Requirements: Password length 8-20 characters)")
+                proceed()
 
             else:
                 user_insert_values = (username, password)
                 mycursor.execute("INSERT INTO users (username, user_password) VALUES (%s, %s)", user_insert_values)
+                print("")
+                print("You registered your account!")
+                print("Now login into your account.")
+                proceed()
                 project_db.commit()
-                break
+                continue
 
         elif user_option == 2:
             username = input("Please enter your username: ")
@@ -82,10 +95,12 @@ def Register_Login():
             if result is None:
                 print("")
                 print("User doesn't exists.")
+                proceed()
             
             else:
                 print("")
                 print("Welcome in your password manager.")
+                proceed()
                 user_id = result[0]
                 return user_id
             
@@ -179,12 +194,7 @@ def Adding_Password(user_id):
     
 
 
-
-
-
-
-register_login = Register_Login()
-password_manager = Password_Manager(register_login)
+password_manager = Password_Manager(user_id=Register_Login())
 
 
 #TODO mozna zalozyc puste konto bez znakow XD, jesli nie uzytkownik nie ma zadnych hasel to wyswietl wiadomosc
