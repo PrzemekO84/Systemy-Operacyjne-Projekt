@@ -11,8 +11,8 @@ use PasswordManager;
 #Create Table passwords(
 #password_id int Primary KEY auto_increment,
 #user_id int,
-#page varchar(30),
-#login varchar(30),
+#page varchar(20),
+#login varchar(20),
 #password varchar(30),
 #foreign key (user_id) references users(user_id)
 #);

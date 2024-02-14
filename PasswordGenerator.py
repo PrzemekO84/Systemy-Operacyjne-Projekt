@@ -9,6 +9,7 @@ digits = string.digits
 chars = string.punctuation
 
 def proceed():
+    print("")
     print("Press any key to proceed.")
     msvcrt.getch()
     os.system('cls' if os.name == 'nt' else 'clear')
@@ -34,7 +35,7 @@ class PasswordGenerator:
             try:
                 user_password_option = int(input("Please choose option 1 or 2: "))
             except ValueError:
-                print("Please enter a valid number.\n")
+                print("Please enter a valid number.")
                 proceed()
                 continue
 
@@ -51,7 +52,7 @@ class PasswordGenerator:
                 print("")
                 password_length = int(input("How long do you want your password to be? (minimum 8, maximum 20) : "))
             except ValueError:
-                print("Please enter a valid number.\n")
+                print("Please enter a valid number.")
                 proceed()
                 continue
 

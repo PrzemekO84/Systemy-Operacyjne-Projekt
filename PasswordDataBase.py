@@ -49,7 +49,7 @@ def Register_Login():
         if user_option == 1:
             print("")
             print("Requirements: Username length 4-20 characters")
-            print("Requirements: Password length 8-20 characters")
+            print("Requirements: Password length 5-20 characters")
             print("")
             username = input("Please enter your username: ")
             password = input("Please enter your password: ")
@@ -63,15 +63,16 @@ def Register_Login():
                 print("Username already exists!")
                 print("")
                 print("Please choose different username.")
+                proceed()
 
             elif len(username) > 20 or len(username) < 4:
                 print("")
                 print("Incorrect username! (Requirements: Username length 4-20 characters)")
                 proceed()
 
-            elif len(password) > 20 or len(password) < 8:
+            elif len(password) > 20 or len(password) < 5:
                 print()
-                print("Incorrect password (Requirements: Password length 8-20 characters)")
+                print("Incorrect password (Requirements: Password length 6-20 characters)")
                 proceed()
 
             else:
@@ -79,14 +80,16 @@ def Register_Login():
                 mycursor.execute("INSERT INTO users (username, user_password) VALUES (%s, %s)", user_insert_values)
                 print("")
                 print("You registered your account!")
+                print()
                 print("Now login into your account.")
                 proceed()
                 project_db.commit()
                 continue
 
         elif user_option == 2:
+            print("")
             username = input("Please enter your username: ")
-            password = input("Please enter your password:  ")
+            password = input("Please enter your password: ")
 
             check_query = "SELECT * FROM users WHERE username = %s and user_password = %s"
             mycursor.execute(check_query, (username, password))
@@ -141,6 +144,7 @@ def Password_Manager(user_id):
 
         elif user_option == 3:
             print("Change password")
+            update_password = Update_Password(user_id)
         
         elif user_option == 4:
             break
@@ -155,48 +159,136 @@ def Show_List(user_id):
     print("")
     check_query = "SELECT * FROM passwords where user_id = %s"
     mycursor.execute(check_query, (user_id,))
+    # result = mycursor.fetchall()
+
+    # if not result:
+    #     print("You don't have any passwords saved!")
+    #     proceed()
+    #     return 0
     
+    print("Name of page: ")
+    print("")
+    count = 1
+
     for x in mycursor:
-        print("Name of Website: " f"{x[2]}")
+        print(f"{count}." f"{x[2]}")
         print("")
+        count += 1
 
     user_website_choice = input("Please type the name of webiste to show password: ")
+    print("")
 
-    check_query = "SELECT * FROM passwords WHERE page = %s and user_id = %s"
+    if len(user_website_choice) <= 0:
+        print("This field cannot be empty!")
+        proceed()
+        return 0
+
+     
+
+    check_query = "SELECT * FROM passwords WHERE page = %s AND user_id = %s"
     mycursor.execute(check_query, (user_website_choice, user_id))
     result = mycursor.fetchone()
+
+    #lower_result = result[2].lower()
+    #print(lower_result)
     
 
     if result is None:
         print("Page doesn't exists")
+        proceed()
     
     else:
-        for x in result:
-            print(x)
-
-
-
-    
+        print("Name of page: " f"{result[2]}\n")
+        print("Login: " f"{result[3]}")
+        print("Password: " f"{result[4]}")
+        proceed()
+        return 0
         
-
-        
-
-    
+   
 
 def Adding_Password(user_id):
+    print("Adding password!")
     print("")
     page = input("Please enter the name of page: ")
     login = input("Please enter the login: ")
     password = input("Please enter the password: ")
-    mycursor.execute("INSERT INTO passwords (user_id, page, login, password) Values(%s, %s, %s, %s)", (user_id, page, login, password))
+
+    check_query = "SELECT COUNT(*) FROM passwords WHERE user_id = %s and page = %s"
+    mycursor.execute(check_query, (user_id, page))
+    result = mycursor.fetchone()
+
+    if result is not None:
+        print("")
+        print("Name of page already exists in database. Please delete it or update the password!")
+        proceed()
     
-    project_db.commit()
+    elif len(page) <= 0 or len(page) > 20:
+        print("Name of your page must be between 1-20 characters!")
+        proceed()
+    
+    elif len(login) <= 0 or len(login) > 20:
+        print("Login must be between 1-20 characters!")
+        proceed()
+
+    elif len(password) <= 0 or len(password) > 30:
+        print("Password length must be between 1-30 characters!")
+        proceed()
+
+    else:
+        print("")
+        print("Password added successfully")
+        mycursor.execute("INSERT INTO passwords (user_id, page, login, password) Values(%s, %s, %s, %s)", (user_id, page, login, password))
+        proceed()
+        project_db.commit()
     
 
+def Update_Password(user_id):
+    print("")
+    print("Updating password!")
+    print("")
 
+    check_query = "SELECT * FROM passwords where user_id = %s"
+    mycursor.execute(check_query, (user_id,))
+    result = mycursor.fetchall()
+
+
+    if not result:
+        print("You don't have any passwords saved!")
+        proceed()
+        return 0
+
+    print("Name of page: ")
+    print("")
+    count = 1
+
+    for x in result:
+        print(f"{count}." f"{x[2]}")
+        print("")
+        count += 1
+
+    update_choice = input("Please type the name of the page that you want to change the password: ")
+
+    check_query = "SELECT * FROM passwords WHERE page = %s AND user_id = %s"
+    mycursor.execute(check_query, (update_choice, user_id))
+    result = mycursor.fetchone()
+
+    if result is None:
+        print("You didn't saved password for this page!")
+
+    elif len(update_choice) <= 0:
+        print("This field cannot be empty!")
+
+    else:
+        print("siema")
+
+    
+
+    
+
+    
 password_manager = Password_Manager(user_id=Register_Login())
 
 
-#TODO mozna zalozyc puste konto bez znakow XD, jesli nie uzytkownik nie ma zadnych hasel to wyswietl wiadomosc
-#lower() name of page ? sprawdzaj insert czy taka strona juz istnieje, czasami jak dodajesz hasla na nowym koncie to 
-# user_id sie nie dodaje do tabeli password XD czemu ?
+
+#TODO napraw adding password zawsze pokazuje ze istnieje strona, jak drugi raz probujesz wejsc w showlist i update to wywala czemu ??????????????  xDddD
+#dodaj delte popraw caly interfejs i bedzie git
