@@ -3,6 +3,7 @@ import string
 import os
 import pyperclip
 import msvcrt
+#Importy potrzebnych bibliotek
 
 letters = string.ascii_letters
 digits = string.digits
@@ -20,11 +21,13 @@ def proceed():
     # input()
     # os.system("cls")
 
+#Klasa PasswordGenerator
 class PasswordGenerator:
 
     def __init__(self):
         print("Password Generator.\n")
 
+    #Funkcja wyboru typu hasła
     def Password_Type(self):
         while True:
             print("Do you want to create your own password structure or do you just want to create a random password?")
@@ -49,6 +52,7 @@ class PasswordGenerator:
                 proceed()
                 continue
 
+    #Funkcja pytajaca o długość hasła
     def Password_Length(self):
         while True:
             try:
@@ -70,6 +74,7 @@ class PasswordGenerator:
                 print("Password length must be between 8 and 20.")
                 proceed()
 
+    #Tworzenie hasła ze wskasówkami od użytkownika
     def User_Password(self, password_length):
 
         #options = ["yes", "y", "no", "n"]
@@ -79,6 +84,7 @@ class PasswordGenerator:
         print("")
         print("Please choose what chars do you want in your password.\n")
         
+        #Dodanie liter
         while True:
             user_choice_letters = input("Do you want letters in your password? (Yes/No) or (y/n) : ")
             user_choice_letters.lower()
@@ -100,7 +106,7 @@ class PasswordGenerator:
                 proceed()
                 continue
 
-
+        #Dodanie cyfr
         while True:
             print("")
             user_choice_digits = input("Do you want digits in your password ? (Yes/No) or (y/n) : ")
@@ -123,7 +129,7 @@ class PasswordGenerator:
                 proceed()
                 continue
 
-        
+        #Dodanie znaków
         while True:
             print("")
             user_choice_chars = input("Do you want chars in your password ? (Yes/No) or (y/n) : ")
@@ -146,6 +152,7 @@ class PasswordGenerator:
                 proceed()
                 continue
 
+        #Tworzenie hasła
         for x in range(password_length):
             x = random.choice(chars_option)
             password.append(x)
@@ -155,6 +162,7 @@ class PasswordGenerator:
         print("")
         print("\033[94mYour password is:\033[0m " + string_password)
 
+        #Zapis hasła do schowka
         while True:
             print("")
             clipboard = input("Do you want to save the password to clipboard? (Yes/No) or (y/n) : ")
@@ -177,6 +185,7 @@ class PasswordGenerator:
                 proceed()
                 continue
     
+    #Tworzenie hasła bez wskazówek użytkownika
     def Random_Password(self, password_length):
         print("")
         print("Creating random password!")
@@ -185,6 +194,7 @@ class PasswordGenerator:
         chars_group = letters + digits + chars
         password = []
 
+        #Tworzenie hasła
         for random_char in range(password_length):
 
             random_char = random.choice(chars_group)
@@ -194,7 +204,7 @@ class PasswordGenerator:
         string_password = "".join(password)
         print("\033[94mYour password is:\033[0m " + string_password)
 
-    
+        #Zapis hasła do schowka
         while True:
             print("")
             clipboard = input("Do you want to save the password to clipboard? (Yes/No) or (y/n) : ")
@@ -217,6 +227,7 @@ class PasswordGenerator:
                 proceed()
                 continue
 
+    #Główna funkcja do obsługi generatora haseł
     def Generator_Manager():
         password_generator = PasswordGenerator()
         password_type = password_generator.Password_Type()
