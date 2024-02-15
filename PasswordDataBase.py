@@ -1,7 +1,7 @@
 import mysql.connector as mysql
 from PasswordGenerator import proceed
 
-#Proba polaczenia sie z baza danych MySQL
+
 try:
     db = mysql.connect(
     host = 'localhost',
@@ -16,18 +16,19 @@ except Exception as e:
 #Laczenie z baza danych PasswordManager
 try:
     project_db = mysql.connect(
-        host = "localhost",
-        user = "root",
-        password = "siemaeniu",
-        database = "PasswordManager"
+    host = "localhost",
+    user = "root",
+    password = "siemaeniu",
+    database = "PasswordManager"
     )
-    print("Successfully connected to Procjet DataBase.")
+    print("Successfully connected to Procjet DataBase.")          
 except Exception as e:
     print(e)
-    print("Could not connect to Project DataBase. ")
+    print("Could not connect to Project DataBase.")    
 
+    
+mycursor = project_db.cursor(buffered=True)
 
-mycursor = project_db.cursor()
 
 def Register_Login():
     while True:
@@ -110,7 +111,7 @@ def Register_Login():
         elif user_option == 3:
             print("")
             print("See you soon!")
-            break
+            return None
 
         else:
             print("Wrong option choose number 1 or 2")
@@ -124,53 +125,72 @@ def Password_Manager(user_id):
         print("1.Show list of your passwords.")
         print("2.Add password.")
         print("3.Change password")
-        print("4.Exit")
+        print("4.Change login")
+        print("5.Delete password")
+        print("6.Exit")
 
         try:
             print("")
-            user_option = int(input("Please choose option : "))
+            user_option = int(input("Please choose an option : "))
 
         except ValueError:
             print("Please choose number option. Do not use characters.")
+            proceed()
             continue
 
         if user_option == 1:
-            print("Show list of passwords")
+            print("")
+            print("Show list of passwords!")
             show_list = Show_List(user_id)  
         
         elif user_option == 2:
-            print("Add password")
+            print("")
+            print("Add the password!")
             adding_password = Adding_Password(user_id)
 
         elif user_option == 3:
-            print("Change password")
+            print("")
+            print("Change the password!")
             update_password = Update_Password(user_id)
         
         elif user_option == 4:
+            print("")
+            print("Change the login!")
+            update_login = Update_Login(user_id)
+
+        elif user_option == 5:
+            print("")
+            print(f"Delete the Password!")
+            delete_password = Delete(user_id)
+
+        elif user_option == 6:
+            print("")
+            print("Thanks for using this application. Bye!")
             break
 
         else:
-            print("Wrong option please choose number between 1 or 4") 
+            print("")
+            print("Wrong option please choose number between 1 or 6")
+            proceed() 
             continue  
-
-         
+       
 
 def Show_List(user_id):
     print("")
     check_query = "SELECT * FROM passwords where user_id = %s"
     mycursor.execute(check_query, (user_id,))
-    # result = mycursor.fetchall()
+    result = mycursor.fetchall()
 
-    # if not result:
-    #     print("You don't have any passwords saved!")
-    #     proceed()
-    #     return 0
+    if not result:
+        print("You don't have any passwords saved!")
+        proceed()
+        return 0
     
     print("Name of page: ")
     print("")
     count = 1
 
-    for x in mycursor:
+    for x in result:
         print(f"{count}." f"{x[2]}")
         print("")
         count += 1
@@ -183,8 +203,6 @@ def Show_List(user_id):
         proceed()
         return 0
 
-     
-
     check_query = "SELECT * FROM passwords WHERE page = %s AND user_id = %s"
     mycursor.execute(check_query, (user_website_choice, user_id))
     result = mycursor.fetchone()
@@ -192,22 +210,20 @@ def Show_List(user_id):
     #lower_result = result[2].lower()
     #print(lower_result)
     
-
     if result is None:
         print("Page doesn't exists")
         proceed()
     
     else:
-        print("Name of page: " f"{result[2]}\n")
-        print("Login: " f"{result[3]}")
-        print("Password: " f"{result[4]}")
+        print("")
+        print("\033[94mName of page:\033[0m " f"{result[2]}\n")  # Blue color
+        print("\033[92mLogin:\033[0m " f"{result[3]}")          # Green color
+        print("\033[91mPassword:\033[0m " f"{result[4]}")      # Red color
         proceed()
         return 0
         
-   
 
 def Adding_Password(user_id):
-    print("Adding password!")
     print("")
     page = input("Please enter the name of page: ")
     login = input("Please enter the login: ")
@@ -217,20 +233,23 @@ def Adding_Password(user_id):
     mycursor.execute(check_query, (user_id, page))
     result = mycursor.fetchone()
 
-    if result is not None:
+    if result[0] > 0:
         print("")
-        print("Name of page already exists in database. Please delete it or update the password!")
+        print("Name of the page already exists in database. Please delete it or update the password!")
         proceed()
     
     elif len(page) <= 0 or len(page) > 20:
+        print("")
         print("Name of your page must be between 1-20 characters!")
         proceed()
     
     elif len(login) <= 0 or len(login) > 20:
+        print("")
         print("Login must be between 1-20 characters!")
         proceed()
 
     elif len(password) <= 0 or len(password) > 30:
+        print("")
         print("Password length must be between 1-30 characters!")
         proceed()
 
@@ -244,8 +263,6 @@ def Adding_Password(user_id):
 
 def Update_Password(user_id):
     print("")
-    print("Updating password!")
-    print("")
 
     check_query = "SELECT * FROM passwords where user_id = %s"
     mycursor.execute(check_query, (user_id,))
@@ -257,7 +274,7 @@ def Update_Password(user_id):
         proceed()
         return 0
 
-    print("Name of page: ")
+    print("Name of pages: ")
     print("")
     count = 1
 
@@ -272,21 +289,150 @@ def Update_Password(user_id):
     mycursor.execute(check_query, (update_choice, user_id))
     result = mycursor.fetchone()
 
-    if result is None:
-        print("You didn't saved password for this page!")
-
-    elif len(update_choice) <= 0:
+    if len(update_choice) <= 0:
+        print("")
         print("This field cannot be empty!")
+        proceed()
+
+    elif result is None:
+        print("")
+        print("You didn't saved password for this page!")
+        proceed()
 
     else:
-        print("siema")
+        print("")
+        new_password = input("Please type new password: ")
+
+        if len(new_password) > 30 or len(new_password) <= 0:
+            print("")
+            print("Password must be between 1-30 characters!")
+            proceed()
+            return 0
+
+        check_query = "UPDATE passwords SET password = %s WHERE user_id = %s and page = %s"
+        mycursor.execute(check_query, (new_password, user_id, update_choice))
+
+        project_db.commit()
+        print("")
+        print("Password updated successfully!")
+
+        proceed()
+
+
+def Update_Login(user_id):
+    print("")
+
+    check_query = "SELECT * FROM passwords where user_id = %s"
+    mycursor.execute(check_query, (user_id,))
+    result = mycursor.fetchall()
+
+    if not result:
+        print("You didn't saved any password yet!")
+        proceed()
+        return 0
+    
+    print("Name of pages: ")
+    print("")
+
+    count = 1
+
+    for x in result:
+        print(f"{count}." f"{x[2]}")
+        print("")
+        count += 1
+
+    update_choice = input("Please type the name of the page that you want to change the login: ")
+
+    check_query = "SELECT * FROM passwords WHERE user_id = %s and page = %s"
+    mycursor.execute(check_query, (user_id, update_choice))
+    result = mycursor.fetchone()
+
+    if len(update_choice) <= 0:
+        print("")
+        print("This field cannot be empty!")
+        proceed()
+
+    elif result is None:
+        print("")
+        print("You didn't saved password for this page!")
+        proceed()
+
+    else:
+        print("")
+        new_login = input("Please type new login: ")   
+
+        if len(new_login) > 30 or len(new_login) <= 0:
+            print("")
+            print("Login must be between 1-30 characters!")
+            proceed()
+            return 0
+
+        check_query = "UPDATE passwords SET login = %s WHERE user_id = %s AND page = %s"
+        mycursor.execute(check_query, (new_login, user_id, update_choice))
+
+        project_db.commit()
+        print("")
+        print("Login updated successfully!")
+
+        proceed()
+
+
+def Delete(user_id):
+    print("")
+
+    check_query = "SELECT * FROM passwords where user_id = %s"
+    mycursor.execute(check_query, (user_id,))
+    result = mycursor.fetchall()
+
+    if not result:
+        print("You didn't saved any password yet!")
+        proceed()
+        return 0
+    
+    print("Name of pages: ")
+    print("")
+
+    count = 1
+
+    for x in result:
+        print(f"{count}." f"{x[2]}")
+        print("")
+        count += 1
+
+    delete_choice = input("Please type the name of the page that you want to delete: ")
+
+    check_query = "SELECT * FROM passwords WHERE user_id = %s and page = %s"
+    mycursor.execute(check_query, (user_id, delete_choice))
+    result = mycursor.fetchone()
+
+    if len(delete_choice) <= 0:
+        print("")
+        print("This field cannot be empty!")
+        proceed()
+
+    elif result is None:
+        print("")
+        print("You didn't saved password for this page!")
+        proceed()
 
     
 
-    
+    else:   
 
+        check_query = "DELETE FROM passwords WHERE user_id = %s AND page = %s"
+        mycursor.execute(check_query, (user_id, delete_choice))
+
+        project_db.commit()
+        print("")
+        print("Password deleted successfully!")
+
+        proceed()
+
+        
+
+if __name__ == "__main__":
+    password_manager = Password_Manager(user_id=Register_Login())
     
-password_manager = Password_Manager(user_id=Register_Login())
 
 
 
