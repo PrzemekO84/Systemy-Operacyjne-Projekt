@@ -2,13 +2,18 @@ import random
 import string
 import os
 import pyperclip
-import msvcrt
+import msvcrt #Windows
+#import sys #Linux
+#import tty #Linux
+#import termios #Linux
 #Importy potrzebnych bibliotek
 
+#Zbiór potrzebnych liter,cyfr i znaków
 letters = string.ascii_letters
 digits = string.digits
 chars = string.punctuation
 
+#Czyszczenie konsoli
 def proceed():
     print("")
     print("Press any key to proceed.")
@@ -20,6 +25,19 @@ def proceed():
     # print("Press any key to proceed.")
     # input()
     # os.system("cls")
+
+#Linux -__- #Czyszczenie kosnolo
+# def proceed():
+#     print("")
+#     print("Press any key to proceed.")
+#     # Set terminal to raw mode to read a single key without Enter
+#     old_settings = termios.tcgetattr(sys.stdin)
+#     tty.setraw(sys.stdin.fileno())
+#     sys.stdin.read(1)
+#     termios.tcsetattr(sys.stdin, termios.TCSADRAIN, old_settings)
+#     # Clear the screen
+#     os.system('clear')
+
 
 #Klasa PasswordGenerator
 class PasswordGenerator:
