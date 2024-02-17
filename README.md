@@ -12,5 +12,13 @@ Funkcje programu:
     - Mozliwość aktualizacji nazwy użytkownika
     - Mozliwość usunięcia hasła z bazy danych
 
+Diagram bazy danych
+
+Tabela users
+![image](https://github.com/PrzemekO84/Systemy-Operacyjne-Projekt/assets/150724625/9771b9e3-772f-48df-adb6-998d23f22e0c)
+
+Tabela passwords
+![image](https://github.com/PrzemekO84/Systemy-Operacyjne-Projekt/assets/150724625/d09d7270-ef88-4cf2-99b8-551f34b1449c)
+
 
 
